@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404 # a shortcut to help with shortening the code 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -25,14 +26,45 @@ def cars_list(request):
             # else:
             #     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
-def car_detail(request,pk): #make sure the pk request/parameter matches the urls app parameter for get by id function. 
+@api_view(['GET', 'PUT'])
+# make sure the pk request/parameter matches the urls app parameter for get by id function. 
+def car_detail(request, pk): 
 
-    try:
-        car = Car.objects.get(pk = pk)
+# Instead of all this code try using the statments below.
+    # try:
+    #     car = Car.objects.get(pk = pk)
+    #     serializer = CarSerializer(car)
+    #     return Response(serializer.data)
+
+    # except Car.DoesNotExist:
+    #     return Response(status = status.HTTP_404_NOT_FOUND)
+
+#############################################################################################################################################
+
+    # if request.method == 'GET':
+    #     car = get_object_or_404(Car, pk = pk) # 2 arguments are needed which is the Model where its querying from and the pk = pk
+    #     serializer = CarSerializer(car)
+    #     return Response(serializer.data)
+
+    # elif request.method == 'PUT':
+    #     car = get_object_or_404(Car, pk = pk)
+    #     serializer = CarSerializer(car, data = request.data)
+    #     serializer.is_valid(raise_exception = True)
+    #     serializer.save()
+    #     return Response(serializer.data)
+
+#############################################################################################################################################
+
+# The above code can be trimmed down to this:
+
+    car = get_object_or_404(Car, pk = pk)
+
+    if request.method == 'GET':
         serializer = CarSerializer(car)
         return Response(serializer.data)
 
-    except Car.DoesNotExist:
-        return Response(status = status.HTTP_404_NOT_FOUND)
-
+    elif request.method == 'PUT':
+        serializer = CarSerializer(car, data = request.data)
+        serializer.is_valid(raise_exception = True)
+        serializer.save()
+        return Response(serializer.data)
