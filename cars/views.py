@@ -24,3 +24,15 @@ def cars_list(request):
             #     return Response(serializer.data, status = status.HTTP_201_CREATED)
             # else:
             #     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def car_detail(request,pk): #make sure the pk request/parameter matches the urls app parameter for get by id function. 
+
+    try:
+        car = Car.objects.get(pk = pk)
+        serializer = CarSerializer(car)
+        return Response(serializer.data)
+
+    except Car.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+
