@@ -26,7 +26,8 @@ def cars_list(request):
             # else:
             #     return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET', 'PUT'])
+# Lastly you can add delete to this. 
+@api_view(['GET', 'PUT', 'DELETE'])
 # make sure the pk request/parameter matches the urls app parameter for get by id function. 
 def car_detail(request, pk): 
 
@@ -68,3 +69,8 @@ def car_detail(request, pk):
         serializer.is_valid(raise_exception = True)
         serializer.save()
         return Response(serializer.data)
+    elif request.method == 'DELETE':
+        car.delete()
+        return Response(status = status.HTTP_204_NO_CONTENT)
+
+
